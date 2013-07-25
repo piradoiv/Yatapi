@@ -1,3 +1,16 @@
-# Place all the behaviors and hooks related to the matching controller here.
-# All this logic will automatically be available in application.js.
-# You can use CoffeeScript in this file: http://jashkenas.github.com/coffee-script/
+
+currentStep = 0
+$addTaskInput = $ '.yatapi-tasks .yatapi-addtask-input'
+$addTaskInput.on 'keypress', (event) ->
+  if currentStep is 1 and event.charCode is 13
+    stepTwo()
+
+stepOne = ->
+  currentStep++
+
+stepTwo = ->
+  currentStep++
+  $columns = $ '.tour .yatapi-column'
+  $columns.fadeIn()
+
+stepOne()
