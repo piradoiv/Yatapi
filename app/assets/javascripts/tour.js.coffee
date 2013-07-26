@@ -12,7 +12,7 @@ class Yastapp
     return task.identifier
 
 class Task
-  constructor : (@task, @context) ->
+  constructor : (@task, @context, @completed = false) ->
     @identifier = @generateIdentifier()
     htmlElement = $('p', "##{@identifier}")
     self = this
@@ -22,7 +22,7 @@ class Task
       self.update newValue
 
     @context.on 'change', "##{@identifier} input", (event) ->
-      self.redrawChecked()
+      self.complete()
 
   toString : ->
     @task
@@ -54,13 +54,15 @@ class Task
       element.html self.task
       element.animate { opacity: 1 }, 250
 
-  redrawChecked : ->
+  complete : ->
     element = $("##{@identifier}")
     prop = $('input', element).prop('checked')
 
     if prop is true
+      @completed = true
       decoration = 'line-through'
     else
+      @completed = false
       decoration = 'none'
 
     $('p', element).css('textDecoration', decoration)
