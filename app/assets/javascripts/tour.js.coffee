@@ -17,9 +17,12 @@ class Task
     htmlElement = $('p', "##{@identifier}")
     self = this
 
-    @context.on 'dblclick', "##{@identifier}", (event) ->
+    @context.on 'dblclick', "##{@identifier} p", (event) ->
       newValue = prompt 'New value'
       self.update newValue
+
+    @context.on 'change', "##{@identifier} input", (event) ->
+      self.redrawChecked()
 
   toString : ->
     @task
@@ -50,6 +53,17 @@ class Task
     element.animate { opacity: 0 }, 250, ->
       element.html self.task
       element.animate { opacity: 1 }, 250
+
+  redrawChecked : ->
+    element = $("##{@identifier}")
+    prop = $('input', element).prop('checked')
+
+    if prop is true
+      decoration = 'line-through'
+    else
+      decoration = 'none'
+
+    $('p', element).css('textDecoration', decoration)
 
   display : ->
     $("##{@identifier}").slideDown()
