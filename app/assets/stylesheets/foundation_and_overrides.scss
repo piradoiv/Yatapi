@@ -1010,3 +1010,16 @@
 
 
 @import 'foundation';
+
+.centered {
+  text-align: center;
+}
+
+.yatapi-tasks {
+  max-width: 550px;
+  margin: auto;
+
+  .yatapi-column {
+    border: 1px solid #aaa;
+  }
+}
