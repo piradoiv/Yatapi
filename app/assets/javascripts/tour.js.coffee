@@ -9,6 +9,8 @@ class Yastapp
     task.display()
     @tasks.push task
 
+    return task.identifier
+
 class Task
   constructor : (@task, @context) ->
     @identifier = @generateIdentifier()
@@ -17,8 +19,7 @@ class Task
 
     @context.on 'dblclick', "##{@identifier}", (event) ->
       newValue = prompt 'New value'
-      @task = newValue
-      $('p', "##{self.identifier}").html newValue
+      self.update newValue
 
   toString : ->
     @task
@@ -27,7 +28,10 @@ class Task
     "<div id=\"#{@identifier}\" style=\"display: none\">#{@generateInnerHtml()}</div>"
 
   generateInnerHtml : ->
-    "<p>#{@toString()}</p>"
+    "<input type=\"checkbox\" style=\"float: left; width: 20px;\" /> 
+      &nbsp;
+      <p style=\"float: left\">#{@toString()}</p>
+      <div style=\"clear: both\"></div>"
 
   generateEditHtml : ->
     "<input type=\"text\" value=\"#{@toString()}\" />"
@@ -38,6 +42,15 @@ class Task
 
     return identifier
 
+  update : (newValue) ->
+    self = this
+    return false if !newValue
+    @task = newValue
+    element = $('p', "##{@identifier}")
+    element.animate { opacity: 0 }, 250, ->
+      element.html self.task
+      element.animate { opacity: 1 }, 250
+
   display : ->
     $("##{@identifier}").slideDown()
 
@@ -45,9 +58,6 @@ class Task
 currentStep = 0
 yastapp = new Yastapp $('.yatapi-tasks')
 $addTaskInput = $ '.yatapi-tasks .yatapi-addtask-input'
-$addTaskInput.on 'keypress', (event) ->
-  if currentStep is 1 and event.charCode is 13
-    stepTwo()
 
 stepOne = ->
   currentStep++
@@ -70,7 +80,9 @@ $addTaskInput = $ '.yatapi-tasks .yatapi-addtask-input'
 $addTaskInput.on 'keypress', (event) ->
   if event.charCode is 13
     value = $(this).val()
-    return false if value is ''
+    return false if !value
     $(this).val('')
     yastapp.addTask value
 
+    if currentStep is 1
+      stepTwo()
