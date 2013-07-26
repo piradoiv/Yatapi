@@ -18,7 +18,9 @@ class Task
     self = this
 
     @context.on 'dblclick', "##{@identifier} p", (event) ->
-      newValue = prompt 'New value'
+      $(this).css('userSelect', 'none')
+      newValue = prompt 'New value', $(this).text()
+      $(this).css('userSelect', 'default')
       self.update newValue
 
     @context.on 'change', "##{@identifier} input", (event) ->
